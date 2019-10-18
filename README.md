@@ -11,3 +11,4 @@
     * https://groovy-lang.org/metaprogramming.html#categories
     * https://groovy-lang.org/metaprogramming.html#xform-Category
     * http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
+    * https://github.com/mtumilowicz/groovy-delegate-category-mixin-trait
