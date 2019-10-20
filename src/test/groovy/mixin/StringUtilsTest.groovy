@@ -1,4 +1,5 @@
-import mixin.StringUtils
+package mixin
+
 import spock.lang.Specification
 
 class StringUtilsTest extends Specification {
