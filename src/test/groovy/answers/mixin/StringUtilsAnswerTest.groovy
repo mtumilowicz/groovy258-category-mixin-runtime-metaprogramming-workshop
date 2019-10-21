@@ -1,11 +1,12 @@
-package mixin
+package answers.mixin
+
 
 import spock.lang.Specification
 
-class StringUtilsTest extends Specification {
+class StringUtilsAnswerTest extends Specification {
 
     def setupSpec() {
-        String.mixin StringUtils
+        String.mixin StringUtilsAnswer
     }
 
     def "string concat with comma"() {

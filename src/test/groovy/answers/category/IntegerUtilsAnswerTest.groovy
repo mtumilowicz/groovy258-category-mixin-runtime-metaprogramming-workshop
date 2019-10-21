@@ -1,18 +1,19 @@
-package category
+package answers.category
+
 
 import spock.lang.Specification
 
-class IntegerUtilsTest extends Specification {
+class IntegerUtilsAnswerTest extends Specification {
     def "even"() {
         expect:
-        use(IntegerUtils) {
+        use(IntegerUtilsAnswer) {
             2.isEven()
         }
     }
 
     def "not even"() {
         expect:
-        use(IntegerUtils) {
+        use(IntegerUtilsAnswer) {
             !1.isEven()
         }
     }

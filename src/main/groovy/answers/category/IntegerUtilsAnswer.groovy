@@ -1,7 +1,7 @@
-package category
+package answers.category
 
 @Category(Integer)
-class IntegerUtils {
+class IntegerUtilsAnswer {
     boolean isEven() {
         this % 2 == 0
     }

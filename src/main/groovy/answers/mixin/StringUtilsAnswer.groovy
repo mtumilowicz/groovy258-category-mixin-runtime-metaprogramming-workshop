@@ -1,6 +1,6 @@
-package mixin;
+package answers.mixin
 
-class StringUtils {
+class StringUtilsAnswer {
     static String concatWithComma(String self, String other) {
         self + "," + other
     }
