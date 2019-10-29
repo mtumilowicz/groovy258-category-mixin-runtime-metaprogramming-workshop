@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/java12-fundamentals-hash-map-implementation.svg?branch=master)](https://travis-ci.com/mtumilowicz/java12-fundamentals-hash-map-implementation)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 # groovy258-category-mixin-runtime-metaprogramming-workshop
 
 _Reference_: https://en.wikipedia.org/wiki/Metaclass  
