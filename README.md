@@ -89,9 +89,9 @@ methods, constructors, properties and even static methods by using a neat closur
 # mixins
 * simple example
     ```
-     class CollegeStudent {
-         static { mixin Student, Worker } // note that it's better to use `Traits` than to hack multiple inheritance in that way
-     }
+    class CollegeStudent { // note that it's better to use `Traits` than to hack multiple inheritance in that way
+        static { mixin Student, Worker }
+    }
     ```
 * it is useful if a class not under control had additional methods
 * in order to enable this capability, Groovy implements a feature called `mixin`
