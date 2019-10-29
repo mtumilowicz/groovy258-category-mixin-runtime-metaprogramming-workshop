@@ -8,6 +8,12 @@ _Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category
 _Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
 _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
 
+# preface
+* goals of this workshop:
+    * introducing the concept of runtime metaprogramming
+    * introducing the concept of category with simple example
+    * introducing the concept of mixin with simple example
+
 # runtime metaprogramming
 * allows altering the class model and the behavior of a program at runtime
 ## internals
@@ -83,22 +89,18 @@ methods, constructors, properties and even static methods by using a neat closur
 ![alt text](img/GroovyInterceptions.png)
     
 # mixins
-* Runtime mixins let you add a mixin on any type at runtime
-* the instances are not modified, so if you mixin some class into another, there isn’t a third class generated, and 
-methods which respond to A will continue responding to A even if mixed in.
 ```
  class CollegeStudent {
      static { mixin Student, Worker }
  }
 ```
+* it is useful if a class not under control had additional methods
+* in order to enable this capability, Groovy implements a feature called mixin
+* let you add a mixin on any type at runtime
+* the instances are not modified
+    * if you mixin some class into another, there isn’t a third class generated
+    * methods which respond to `A` will continue responding to `A` even if mixed in
 # category
-* There are situations where it is useful if a class not under control had additional methods. 
-* In order to enable this capability, Groovy implements a feature called Categories.
-* The mechanics: during compilation, all methods are transformed to static ones with an additional self parameter 
-of the type you supply as the annotation parameter (the default type for the self parameters is Object which might 
-be more broad reaching than you like so it is usually wise to specify a type). Properties invoked using 'this' 
-references are transformed so that they are instead invoked on the additional self parameter and not on the 
-Category instance.
 ```
 class Distance {
     def number
@@ -116,29 +118,31 @@ use (NumberCategory)  {
     assert 42.meters.toString() == '42m'
 }
 ```
-The @Category AST transformation simplifies the creation of Groovy categories. Historically, a Groovy category was written like this:
-
-```
-class TripleCategory {
-    public static Integer triple(Integer self) {
-        3*self
-    }
-}
-use (TripleCategory) {
-    assert 9 == 3.triple()
-}
-```
-The @Category transformation lets you write the same using an instance-style class, rather than a static class style. 
-This removes the need for having the first argument of each method being the receiver. The category can be written 
-like this:
-```
-@Category(Integer)
-class TripleCategory {
-    public Integer triple() { 3*this }
-}
-use (TripleCategory) {
-    assert 9 == 3.triple()
-}
-```
-Note that the mixed in class can be referenced using this instead. It’s also worth noting that using instance fields 
-in a category class is inherently unsafe: categories are not stateful (like traits).
+* it is useful if a class not under control had additional methods 
+* in order to enable this capability, Groovy implements a feature called Categories
+* internals: 
+    * during compilation, all methods are transformed to static ones with an additional self parameter 
+    * properties invoked using 'this' references are transformed so that they are instead invoked on the 
+    additional self parameter and not on the Category instance
+* `@Category` AST transformation simplifies the creation of Groovy categories
+    * Historically, a Groovy category was written like this:
+        ```
+        class TripleCategory {
+            public static Integer triple(Integer self) {
+                3*self
+            }
+        }
+        use (TripleCategory) {
+            assert 9 == 3.triple()
+        }
+        ```
+    * `@Category` transformation lets you write the same using an instance-style class, rather than a static class style
+        ```
+        @Category(Integer)
+        class TripleCategory {
+            public Integer triple() { 3*this }
+        }
+        use (TripleCategory) {
+            assert 9 == 3.triple()
+        }
+        ```
