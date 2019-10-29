@@ -9,19 +9,9 @@ _Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_w
 _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
 
 # runtime metaprogramming
-* ExpandoMetaClass is a MetaClass that behaves like an Expando, allowing the addition or replacement of methods, 
-properties and constructors on the fly.
-    * Just as an ordinary class defines the behavior of certain objects, a metaclass defines the behavior of certain 
-    classes and their instances
-    * MetaClassImpl - Allows methods to be dynamically added to existing classes at runtime
-    * A MetaClass within Groovy defines the behaviour of any given Groovy or Java class.
-        * getMethods()
-        * getProperty​(Class sender, Object receiver, String property, boolean isCallToSuper, boolean fromInsideClass)
-        * invokeMethod​(Class sender, Object receiver, String methodName, Object[] arguments, boolean isCallToSuper, boolean fromInsideClass)
+* allows altering the class model and the behavior of a program at runtime
+* `MetaClass`, `MetaClassImpl` defines the behaviour of any given Groovy or Java class
     ```
-    * All method calls from Groovy code go through the meta class
-    * The MetaClass interface defines two parts. The client API, which is defined via the extend MetaObjectProtocol 
-  interface and the contract with the Groovy runtime system
     // Goal = to be able to simply write "1.m + 20.cm - 8.mm"
     Number.metaClass {
         getMm = { delegate          }
@@ -31,6 +21,17 @@ properties and constructors on the fly.
     
     assert (1.m + 20.cm - 8.mm) == 1.192.m
     ```
+    * just as an ordinary class defines the behavior of certain objects, a metaclass defines the behavior of certain 
+        classes and their instances
+    * all method calls from Groovy code go through the meta class
+    * `getMethods()`
+    * `getProperty​(Class sender, Object receiver, String property, boolean isCallToSuper, boolean fromInsideClass)`
+    * `invokeMethod​(Class sender, Object receiver, String methodName, Object[] arguments, boolean isCallToSuper, boolean fromInsideClass)`
+    * The MetaClass interface defines two parts
+        * client API, which is defined via the extend MetaObjectProtocol interface 
+        * and the contract with the Groovy runtime system
+* `ExpandoMetaClass` is a `MetaClass` that behaves like an `Expando`, allowing the addition or replacement of methods, 
+properties and constructors on the fly
 * In Groovy we work with three kinds of objects: POJO, POGO and Groovy Interceptors
     * POJO - A regular Java object whose class can be written in Java or any other language for the JVM.
     * POGO - A Groovy object whose class is written in Groovy. It extends java.lang.Object and implements the 
