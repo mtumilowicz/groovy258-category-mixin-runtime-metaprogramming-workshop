@@ -8,8 +8,9 @@ _Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category
 _Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
 _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
 
-# runtime metaprogramming foundations
+# runtime metaprogramming
 * allows altering the class model and the behavior of a program at runtime
+## internals
 * for every method invocation from groovy code, Groovy will find the `MetaClass` for the given object 
 and delegate the method resolution to the metaclass via `MetaClass#invokeMethod` which should not be confused 
 with `GroovyObject#invokeMethod` which happens to be a method that the metaclass may eventually call
@@ -44,10 +45,6 @@ methods, constructors, properties and even static methods by using a neat closur
             * field metaClass: MetaClass
             * field property: Object
     * Groovy Interceptor - a Groovy object
-        * implements `groovy.lang.GroovyInterceptable`
-            * is marker interface that extends GroovyObject and is used to notify the Groovy runtime that 
-            all methods should be intercepted through the method dispatcher mechanism of the Groovy runtime
-        * has method-interception capability
         ```
         Live Demo
         class Example {
@@ -78,8 +75,12 @@ methods, constructors, properties and even static methods by using a neat closur
            }
         }
         ```
-* order of invocations
-    ![alt text](img/GroovyInterceptions.png)
+        * implements `groovy.lang.GroovyInterceptable`
+            * is marker interface that extends GroovyObject and is used to notify the Groovy runtime that 
+            all methods should be intercepted through the method dispatcher mechanism of the Groovy runtime
+        * has method-interception capability
+## order of invocations
+![alt text](img/GroovyInterceptions.png)
     
 # mixins
 * Runtime mixins let you add a mixin on any type at runtime
