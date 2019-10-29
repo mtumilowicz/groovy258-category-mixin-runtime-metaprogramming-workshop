@@ -8,8 +8,11 @@ _Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category
 _Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
 _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
 
-# runtime metaprogramming
+# runtime metaprogramming foundations
 * allows altering the class model and the behavior of a program at runtime
+* for every method invocation from groovy code, Groovy will find the `MetaClass` for the given object 
+and delegate the method resolution to the metaclass via `MetaClass#invokeMethod` which should not be confused 
+with `GroovyObject#invokeMethod` which happens to be a method that the metaclass may eventually call
 * `MetaClass`, `MetaClassImpl` defines the behaviour of any given Groovy or Java class
     ```
     // Goal = to be able to simply write "1.m + 20.cm - 8.mm"
@@ -30,16 +33,21 @@ _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMeta
     * The MetaClass interface defines two parts
         * client API, which is defined via the extend MetaObjectProtocol interface 
         * and the contract with the Groovy runtime system
-* `ExpandoMetaClass` is a `MetaClass` that behaves like an `Expando`, allowing the addition or replacement of methods, 
-properties and constructors on the fly
-* In Groovy we work with three kinds of objects: POJO, POGO and Groovy Interceptors
-    * POJO - A regular Java object whose class can be written in Java or any other language for the JVM.
-    * POGO - A Groovy object whose class is written in Groovy. It extends java.lang.Object and implements the 
-    groovy.lang.GroovyObject interface by default. 
-        * Interface GroovyObject
-            * MetaClass - metaClass
-            * Object - property
-        ![alt text](img/GroovyInterceptions.png)
+* `ExpandoMetaClass` is a `MetaClass` that behaves like an `Expando` - it allows for dynamically adding or changing 
+methods, constructors, properties and even static methods by using a neat closure syntax
+* In Groovy we work with three kinds of objects
+    * POJO - a regular Java object
+    * POGO - a Groovy object whose class is written in Groovy
+        * extends `java.lang.Object`
+        * implements `groovy.lang.GroovyObject`
+            * through `GroovyObject` we have access to `MetaClass`
+            * field metaClass: MetaClass
+            * field property: Object
+    * Groovy Interceptor - a Groovy object
+        * implements `groovy.lang.GroovyInterceptable`
+            * is marker interface that extends GroovyObject and is used to notify the Groovy runtime that 
+            all methods should be intercepted through the method dispatcher mechanism of the Groovy runtime
+        * has method-interception capability
         ```
         Live Demo
         class Example {
@@ -70,15 +78,9 @@ properties and constructors on the fly
            }
         }
         ```
-    * Groovy Interceptor - A Groovy object that implements the groovy.lang.GroovyInterceptable interface and 
-    has method-interception capability which is discussed in the GroovyInterceptable section.
-    * The groovy.lang.GroovyInterceptable interface is marker interface that extends GroovyObject and is used to notify 
-    the Groovy runtime that all methods should be intercepted through the method dispatcher mechanism of the Groovy 
-    runtime.
-
-* For every method invocation from groovy code, Groovy will find the MetaClass for the given object and delegate the method resolution to the metaclass via MetaClass#invokeMethod which should not be confused with GroovyObject#invokeMethod which happens to be a method that the metaclass may eventually call
-* Groovy comes with a special MetaClass the so-called ExpandoMetaClass. It is special in that it allows for dynamically adding or changing methods, constructors, properties and even static methods by using a neat closure syntax.
-
+* order of invocations
+    ![alt text](img/GroovyInterceptions.png)
+    
 # mixins
 * Runtime mixins let you add a mixin on any type at runtime
 * the instances are not modified, so if you mixin some class into another, there isn’t a third class generated, and 
