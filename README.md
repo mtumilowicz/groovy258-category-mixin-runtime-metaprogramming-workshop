@@ -1,19 +1,19 @@
 # groovy258-category-mixin-runtime-metaprogramming-workshop
 
-_Reference_: https://en.wikipedia.org/wiki/Metaclass
-_Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/Category.html
-_Reference_: https://groovy-lang.org/metaprogramming.html
-_Reference_: https://groovy-lang.org/metaprogramming.html#categories
-_Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category
-_Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
+_Reference_: https://en.wikipedia.org/wiki/Metaclass  
+_Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/Category.html  
+_Reference_: https://groovy-lang.org/metaprogramming.html  
+_Reference_: https://groovy-lang.org/metaprogramming.html#categories  
+_Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category  
+_Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins  
 _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
 
 # preface
 * goals of this workshop:
     * introducing the concept of runtime metaprogramming
-    * introducing the concept of category with simple example
-    * introducing the concept of mixin with simple example
-
+    * introducing the concept of category (plus simple example)
+    * introducing the concept of mixin (plus simple example)
+* exercises are in `workshop` package, answers in `answers`
 # runtime metaprogramming
 * allows altering the class model and the behavior of a program at runtime
 ## internals
@@ -31,49 +31,50 @@ with `GroovyObject#invokeMethod` which happens to be a method that the metaclass
     
     assert (1.m + 20.cm - 8.mm) == 1.192.m
     ```
-    * just as an ordinary class defines the behavior of certain objects, a metaclass defines the behavior of certain 
-        classes and their instances
+    * simple analogy: just as an ordinary class defines the behavior of certain objects, a metaclass defines 
+    the behavior of certain classes and their instances
     * all method calls from Groovy code go through the meta class
-    * `getMethods()`
-    * `getProperty​(Class sender, Object receiver, String property, boolean isCallToSuper, boolean fromInsideClass)`
-    * `invokeMethod​(Class sender, Object receiver, String methodName, Object[] arguments, boolean isCallToSuper, boolean fromInsideClass)`
-    * The MetaClass interface defines two parts
-        * client API, which is defined via the extend MetaObjectProtocol interface 
+        * `getMethods()`
+        * `getProperty​(Class sender, Object receiver, String property, boolean isCallToSuper, boolean fromInsideClass)`
+        * `invokeMethod​(Class sender, Object receiver, String methodName, Object[] arguments, boolean isCallToSuper, boolean fromInsideClass)`
+    * The `MetaClass` interface defines two parts
+        * client API, which is defined via the extend `MetaObjectProtocol` interface 
         * and the contract with the Groovy runtime system
 * `ExpandoMetaClass` is a `MetaClass` that behaves like an `Expando` - it allows for dynamically adding or changing 
 methods, constructors, properties and even static methods by using a neat closure syntax
 * In Groovy we work with three kinds of objects
-    * POJO - a regular Java object
-    * POGO - a Groovy object whose class is written in Groovy
+    * **POJO** - a regular Java object
+    * **POGO** - a Groovy object whose class is written in Groovy
         * extends `java.lang.Object`
         * implements `groovy.lang.GroovyObject`
             * through `GroovyObject` we have access to `MetaClass`
-            * field metaClass: MetaClass
-            * field property: Object
-    * Groovy Interceptor - a Groovy object
+            * field metaClass: `MetaClass`
+            * field property: `Object`
+    * **Groovy Interceptor** - a Groovy object
+        * implements `groovy.lang.GroovyInterceptable`
+            * is marker interface that extends `GroovyObject` and is used to notify the Groovy runtime that 
+            all methods should be intercepted through the method dispatcher mechanism of the Groovy runtime
+        * has method-interception capability
         ```
         Live Demo
         class Example {
            static void main(String[] args) {
               Student mst = new Student();
-              mst.Name = "Joe";
-              mst.ID = 1;
-        		
-              println(mst.Name);
-              println(mst.ID);
-              mst.AddMarks();
+              mst.id = 1;
+              println mst.id // 1
+              mst.go(); // called invokeMethod go
            } 
         }
          
         class Student implements GroovyInterceptable {
            protected dynamicProps = [:]  
             
-           void setProperty(String pName, val) {
-              dynamicProps[pName] = val
+           void setProperty(String name, val) {
+              dynamicProps[name] = val
            } 
            
-           def getProperty(String pName) {
-              dynamicProps[pName]
+           def getProperty(String name) {
+              dynamicProps[name]
            }
            
            def invokeMethod(String name, Object args) {
@@ -81,10 +82,6 @@ methods, constructors, properties and even static methods by using a neat closur
            }
         }
         ```
-        * implements `groovy.lang.GroovyInterceptable`
-            * is marker interface that extends GroovyObject and is used to notify the Groovy runtime that 
-            all methods should be intercepted through the method dispatcher mechanism of the Groovy runtime
-        * has method-interception capability
 ## order of invocations
 ![alt text](img/GroovyInterceptions.png)
     
@@ -95,11 +92,11 @@ methods, constructors, properties and even static methods by using a neat closur
  }
 ```
 * it is useful if a class not under control had additional methods
-* in order to enable this capability, Groovy implements a feature called mixin
-* let you add a mixin on any type at runtime
+* in order to enable this capability, Groovy implements a feature called `mixin`
+* let you add a `mixin` on any type at runtime
 * the instances are not modified
-    * if you mixin some class into another, there isn’t a third class generated
-    * methods which respond to `A` will continue responding to `A` even if mixed in
+    * if you `mixin` some class into another, there isn’t a third class generated
+    * methods which respond to `A` will continue responding to `A` even if `mixed` in
 # category
 ```
 class Distance {
@@ -119,10 +116,10 @@ use (NumberCategory)  {
 }
 ```
 * it is useful if a class not under control had additional methods 
-* in order to enable this capability, Groovy implements a feature called Categories
+* in order to enable this capability, Groovy implements a feature called `Categories`
 * internals: 
     * during compilation, all methods are transformed to static ones with an additional self parameter 
-    * properties invoked using 'this' references are transformed so that they are instead invoked on the 
+    * properties invoked using `this` references are transformed so that they are instead invoked on the 
     additional self parameter and not on the Category instance
 * `@Category` AST transformation simplifies the creation of Groovy categories
     * Historically, a Groovy category was written like this:
