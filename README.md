@@ -6,6 +6,7 @@ _Reference_: https://groovy-lang.org/metaprogramming.html
 _Reference_: https://groovy-lang.org/metaprogramming.html#categories
 _Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category
 _Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
+_Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
 
 # runtime metaprogramming
 * ExpandoMetaClass is a MetaClass that behaves like an Expando, allowing the addition or replacement of methods, 
@@ -78,9 +79,14 @@ properties and constructors on the fly.
 * Groovy comes with a special MetaClass the so-called ExpandoMetaClass. It is special in that it allows for dynamically adding or changing methods, constructors, properties and even static methods by using a neat closure syntax.
 
 # mixins
-the instances are not modified, so if you mixin some class into another, there isn’t a third class generated, and 
+* Runtime mixins let you add a mixin on any type at runtime
+* the instances are not modified, so if you mixin some class into another, there isn’t a third class generated, and 
 methods which respond to A will continue responding to A even if mixed in.
-
+```
+ class CollegeStudent {
+     static { mixin Student, Worker }
+ }
+```
 # category
 * There are situations where it is useful if a class not under control had additional methods. 
 * In order to enable this capability, Groovy implements a feature called Categories.
@@ -132,13 +138,3 @@ use (TripleCategory) {
 ```
 Note that the mixed in class can be referenced using this instead. It’s also worth noting that using instance fields 
 in a category class is inherently unsafe: categories are not stateful (like traits).
-
-
-
-
-* http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
-    ```
-     class CollegeStudent {
-         static { mixin Student, Worker }
-     }
-    ```
