@@ -82,7 +82,7 @@ methods, constructors, properties and even static methods by using a neat closur
                   return "called invokeMethod $name($args)"
                }
             }
-        ```
+            ```
 ## order of invocations
 ![alt text](img/GroovyInterceptions.png)
     
