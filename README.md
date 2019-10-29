@@ -1,6 +1,11 @@
 # groovy258-category-mixin-runtime-metaprogramming-workshop
 
 _Reference_: https://en.wikipedia.org/wiki/Metaclass
+_Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/Category.html
+_Reference_: https://groovy-lang.org/metaprogramming.html
+_Reference_: https://groovy-lang.org/metaprogramming.html#categories
+_Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category
+_Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
 
 # runtime metaprogramming
 * ExpandoMetaClass is a MetaClass that behaves like an Expando, allowing the addition or replacement of methods, 
@@ -73,9 +78,17 @@ properties and constructors on the fly.
 * Groovy comes with a special MetaClass the so-called ExpandoMetaClass. It is special in that it allows for dynamically adding or changing methods, constructors, properties and even static methods by using a neat closure syntax.
 
 # mixins
+the instances are not modified, so if you mixin some class into another, there isn’t a third class generated, and 
+methods which respond to A will continue responding to A even if mixed in.
+
 # category
 * There are situations where it is useful if a class not under control had additional methods. 
 * In order to enable this capability, Groovy implements a feature called Categories.
+* The mechanics: during compilation, all methods are transformed to static ones with an additional self parameter 
+of the type you supply as the annotation parameter (the default type for the self parameters is Object which might 
+be more broad reaching than you like so it is usually wise to specify a type). Properties invoked using 'this' 
+references are transformed so that they are instead invoked on the additional self parameter and not on the 
+Category instance.
 ```
 class Distance {
     def number
@@ -93,7 +106,32 @@ use (NumberCategory)  {
     assert 42.meters.toString() == '42m'
 }
 ```
+The @Category AST transformation simplifies the creation of Groovy categories. Historically, a Groovy category was written like this:
 
+```
+class TripleCategory {
+    public static Integer triple(Integer self) {
+        3*self
+    }
+}
+use (TripleCategory) {
+    assert 9 == 3.triple()
+}
+```
+The @Category transformation lets you write the same using an instance-style class, rather than a static class style. 
+This removes the need for having the first argument of each method being the receiver. The category can be written 
+like this:
+```
+@Category(Integer)
+class TripleCategory {
+    public Integer triple() { 3*this }
+}
+use (TripleCategory) {
+    assert 9 == 3.triple()
+}
+```
+Note that the mixed in class can be referenced using this instead. It’s also worth noting that using instance fields 
+in a category class is inherently unsafe: categories are not stateful (like traits).
 
 
 
@@ -104,8 +142,3 @@ use (NumberCategory)  {
          static { mixin Student, Worker }
      }
     ```
-* http://docs.groovy-lang.org/latest/html/api/groovy/lang/Category.html
-* https://groovy-lang.org/metaprogramming.html
-    * https://groovy-lang.org/metaprogramming.html#categories
-    * https://groovy-lang.org/metaprogramming.html#xform-Category
-    * http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins
