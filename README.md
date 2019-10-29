@@ -21,16 +21,17 @@ _Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMeta
 and delegate the method resolution to the metaclass via `MetaClass#invokeMethod` which should not be confused 
 with `GroovyObject#invokeMethod` which happens to be a method that the metaclass may eventually call
 * `MetaClass`, `MetaClassImpl` defines the behaviour of any given Groovy or Java class
-    ```
-    // Goal = to be able to simply write "1.m + 20.cm - 8.mm"
-    Number.metaClass {
-        getMm = { delegate          }
-        getCm = { delegate *  10.mm }
-        getM  = { delegate * 100.cm }
-    }
-    
-    assert (1.m + 20.cm - 8.mm) == 1.192.m
-    ```
+    * simple example
+        ```
+        // Goal = to be able to simply write "1.m + 20.cm - 8.mm"
+        Number.metaClass {
+            getMm = { delegate          }
+            getCm = { delegate *  10.mm }
+            getM  = { delegate * 100.cm }
+        }
+        
+        assert (1.m + 20.cm - 8.mm) == 1.192.m
+        ```
     * simple analogy: just as an ordinary class defines the behavior of certain objects, a metaclass defines 
     the behavior of certain classes and their instances
     * all method calls from Groovy code go through the meta class
@@ -55,42 +56,43 @@ methods, constructors, properties and even static methods by using a neat closur
             * is marker interface that extends `GroovyObject` and is used to notify the Groovy runtime that 
             all methods should be intercepted through the method dispatcher mechanism of the Groovy runtime
         * has method-interception capability
-        ```
-        Live Demo
-        class Example {
-           static void main(String[] args) {
-              Student mst = new Student();
-              mst.id = 1;
-              println mst.id // 1
-              mst.go(); // called invokeMethod go
-           } 
-        }
-         
-        class Student implements GroovyInterceptable {
-           protected dynamicProps = [:]  
-            
-           void setProperty(String name, val) {
-              dynamicProps[name] = val
-           } 
-           
-           def getProperty(String name) {
-              dynamicProps[name]
-           }
-           
-           def invokeMethod(String name, Object args) {
-              return "called invokeMethod $name $args"
-           }
-        }
+            ```
+            Live Demo
+            class Example {
+               static void main(String[] args) {
+                  X x = new X();
+                  x.id = 1;
+                  println x.id // 1
+                  x.go(); // called invokeMethod go()
+               } 
+            }
+             
+            class X implements GroovyInterceptable {
+               protected dynamicProps = [:]  
+                
+               void setProperty(String name, val) {
+                  dynamicProps[name] = val
+               } 
+               
+               def getProperty(String name) {
+                  dynamicProps[name]
+               }
+               
+               def invokeMethod(String name, Object args) {
+                  return "called invokeMethod $name($args)"
+               }
+            }
         ```
 ## order of invocations
 ![alt text](img/GroovyInterceptions.png)
     
 # mixins
-```
- class CollegeStudent {
-     static { mixin Student, Worker }
- }
-```
+* simple example
+    ```
+     class CollegeStudent {
+         static { mixin Student, Worker } // note that it's better to use `Traits` than to hack multiple inheritance in that way
+     }
+    ```
 * it is useful if a class not under control had additional methods
 * in order to enable this capability, Groovy implements a feature called `mixin`
 * let you add a `mixin` on any type at runtime
@@ -98,23 +100,24 @@ methods, constructors, properties and even static methods by using a neat closur
     * if you `mixin` some class into another, there isn’t a third class generated
     * methods which respond to `A` will continue responding to `A` even if `mixed` in
 # category
-```
-class Distance {
-    def number
-    String toString() { "${number}m" }
-}
-
-@Category(Number)
-class NumberCategory {
-    Distance getMeters() {
-        new Distance(number: this)
+* simple example
+    ```
+    class Distance {
+        def number
+        String toString() { "${number}m" }
     }
-}
-
-use (NumberCategory)  {
-    assert 42.meters.toString() == '42m'
-}
-```
+    
+    @Category(Number)
+    class NumberCategory {
+        Distance getMeters() {
+            new Distance(number: this)
+        }
+    }
+    
+    use (NumberCategory)  {
+        assert 42.meters.toString() == '42m'
+    }
+    ```
 * it is useful if a class not under control had additional methods 
 * in order to enable this capability, Groovy implements a feature called `Categories`
 * internals: 
