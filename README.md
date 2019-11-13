@@ -9,7 +9,8 @@ _Reference_: https://groovy-lang.org/metaprogramming.html
 _Reference_: https://groovy-lang.org/metaprogramming.html#categories  
 _Reference_: https://groovy-lang.org/metaprogramming.html#xform-Category  
 _Reference_: http://docs.groovy-lang.org/next/html/documentation/#_differences_with_mixins  
-_Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html
+_Reference_: http://docs.groovy-lang.org/latest/html/api/groovy/lang/ExpandoMetaClass.html  
+_Reference_: https://www.youtube.com/watch?v=UJhlp5P7Ec0
 
 # preface
 * goals of this workshop:
