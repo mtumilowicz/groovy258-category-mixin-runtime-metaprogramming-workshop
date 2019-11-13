@@ -20,6 +20,7 @@ _Reference_: https://www.youtube.com/watch?v=UJhlp5P7Ec0
 * exercises are in `workshop` package, answers in `answers`
 # runtime metaprogramming
 * allows altering the class model and the behavior of a program at runtime
+* JVM supports very dynamic behaviour (much cannot be easily used by Java)
 ## internals
 > All problems in computer science can be solved by another level of indirection
 > 
