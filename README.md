@@ -21,6 +21,10 @@ _Reference_: https://www.youtube.com/watch?v=UJhlp5P7Ec0
 # runtime metaprogramming
 * allows altering the class model and the behavior of a program at runtime
 ## internals
+> All problems in computer science can be solved by another level of indirection
+> 
+> David Wheeler
+* this level of indirection is `MetaClass` and `GroovyObject` (object compiled with groovy compiler)
 * for every method invocation from groovy code, Groovy will find the `MetaClass` for the given object 
 and delegate the method resolution to the metaclass via `MetaClass#invokeMethod` which should not be confused 
 with `GroovyObject#invokeMethod` which happens to be a method that the metaclass may eventually call
