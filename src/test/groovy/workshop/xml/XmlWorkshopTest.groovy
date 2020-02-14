@@ -6,7 +6,7 @@ import org.xmlunit.builder.Input
 import org.xmlunit.diff.Diff
 import spock.lang.Specification
 
-class XmlWorkshopTest extends Specification {
+class XmlWorkshoKpTest extends Specification {
     def 'xmls should have no differences'() {
         given:
         def test = XmlWorkshop.toXml()
