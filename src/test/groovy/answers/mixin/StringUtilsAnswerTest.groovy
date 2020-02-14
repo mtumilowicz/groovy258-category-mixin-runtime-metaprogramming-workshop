@@ -9,8 +9,8 @@ class StringUtilsAnswerTest extends Specification {
         String.mixin StringUtilsAnswer
     }
 
-    def "string concat with comma"() {
+    def 'string concat with comma'() {
         expect:
-        "a".concatWithComma("b") == "a,b"
+        'a'.concatWithComma('b') == 'a,b'
     }
 }
