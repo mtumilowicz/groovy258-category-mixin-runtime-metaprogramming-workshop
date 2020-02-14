@@ -3,7 +3,7 @@ package workshop.xml
 import groovy.xml.MarkupBuilder
 
 class XmlWorkshop {
-    def static languages = ['C++': 'Bjarne Stroustrup', 'Java': 'James Gosling', 'Haskell': 'Simon Peyton Jones']
+    def static languagesMap = ['C++': 'Bjarne Stroustrup', 'Java': 'James Gosling', 'Haskell': 'Simon Peyton Jones']
 
     static String toXml() {
         def writer = new StringWriter()
