@@ -27,10 +27,10 @@ _Reference_: https://www.youtube.com/watch?v=UJhlp5P7Ec0
 > David Wheeler
 * this level of indirection is `MetaClass` and `GroovyObject` (object compiled with groovy compiler)
 * for every method invocation from groovy code, Groovy will find the `MetaClass` for the given object 
-and delegate the method resolution to the metaclass via `MetaClass#invokeMethod`
+and delegate the method resolution to the metaclass
     * https://docs.groovy-lang.org/latest/html/api/groovy/lang/MetaClass.html
-        * should not be confused with `GroovyObject#invokeMethod` which happens to be a method that the 
-        metaclass may eventually call
+        * should not be confused with `GroovyObject` which happens to be a methods that the 
+        metaclass may eventually call (`MetaClass#invokeMethod` vs `GroovyObject#invokeMethod`)
     * http://docs.groovy-lang.org/latest/html/api/org/codehaus/groovy/runtime/DefaultGroovyMethods.html
     ```
     '123'.reverse() is '321' // investigate that invocations: reverse() and is
@@ -56,13 +56,12 @@ and delegate the method resolution to the metaclass via `MetaClass#invokeMethod`
     ```
     * simple analogy: just as an ordinary class defines the behavior of certain objects, a metaclass defines 
     the behavior of certain classes and their instances
-    * all method calls from Groovy code go through the meta class
-        * `getMethods()`
+    * all method/property calls from Groovy code go through the meta class
         * `getProperty​(Class sender, Object receiver, String property, boolean isCallToSuper, boolean fromInsideClass)`
         * `invokeMethod​(Class sender, Object receiver, String methodName, Object[] arguments, boolean isCallToSuper, boolean fromInsideClass)`
-* `ExpandoMetaClass` is a `MetaClass` that behaves like an `Expando` - it allows for dynamically adding or changing 
-methods, constructors, properties and even static methods by using a neat closure syntax
-    * `ExpandoMetaClass extends MetaClassImpl implements GroovyObject`
+* `ExpandoMetaClass extends MetaClassImpl implements GroovyObject`
+    * `ExpandoMetaClass` is a `MetaClass` that behaves like an `Expando` - it allows for dynamically adding or changing 
+    methods, constructors, properties and even static methods by using a neat closure syntax
 * In Groovy we work with three kinds of objects
     * **POJO** - a regular Java object
     * **POGO** - a Groovy object whose class is written in Groovy
